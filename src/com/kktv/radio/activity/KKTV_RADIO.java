@@ -1,6 +1,5 @@
 package com.kktv.radio.activity;
 
-import io.vov.vitamio.MediaPlayer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,8 +35,7 @@ public class KKTV_RADIO extends BaseActivity implements OnClickListener,
 	private RadioMenuAdapter mAdapter, mChildAdapter;
 	private int mActivePosition = -1;
 	private String mContentText;
-	private MediaPlayer mPlayer;
-	private static int[] Play = {0, -1, 0};//0:当前的频道 1：当前播放的电台 2：上一次的频道
+	private static int[] Play = {0, -1, 0};
 	@Override
 	protected void onCreate(Bundle inState) {
 		super.onCreate(inState);
@@ -86,37 +84,6 @@ public class KKTV_RADIO extends BaseActivity implements OnClickListener,
 		}
 	};
 	
-	public void PlayerPrepare(String url){
-		try {
-			if (mPlayer == null) {
-				mPlayer = new MediaPlayer(this);
-			}
-			mPlayer.setDataSource(url);
-			mPlayer.prepare();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void PalyerStart(){
-		try {
-			if (mPlayer != null) {
-				mPlayer.start();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void PalyerStop(){
-		try {
-			if (mPlayer != null) {
-				mPlayer.stop();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 	public AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
