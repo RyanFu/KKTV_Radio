@@ -7,6 +7,7 @@ public class RadioType implements Parcelable {
 
 	private String url;
 	private String name;
+	private int flag;
 
 	@Override
 	public int describeContents() {
@@ -24,12 +25,14 @@ public class RadioType implements Parcelable {
 	public void readFromParcel(Parcel in) {
 		url = in.readString();
 		name = in.readString();
+		flag = in.readInt();
 	}
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(url);
 		dest.writeString(name);
+		dest.writeInt(flag);
 	}
 
 	public static final Creator<RadioType> CREATOR = new Creator<RadioType>() {
@@ -60,6 +63,14 @@ public class RadioType implements Parcelable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public int getFlag() {
+		return flag;
+	}
+
+	public void setFlag(int flag) {
+		this.flag = flag;
 	}
 
 }

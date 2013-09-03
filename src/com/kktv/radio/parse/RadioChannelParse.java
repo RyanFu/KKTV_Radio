@@ -32,6 +32,7 @@ public class RadioChannelParse {
 					}
 					String name = video.text();
 					type.setName(name);
+					type.setFlag(0);
 					lists.add(type);
 					type = null;
 				}

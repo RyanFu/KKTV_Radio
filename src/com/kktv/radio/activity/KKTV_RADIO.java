@@ -1,5 +1,6 @@
 package com.kktv.radio.activity;
 
+import io.vov.vitamio.MediaPlayer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,6 @@ import com.kktv.radio.type.RadioListType;
 import com.kktv.radio.type.RadioType;
 import com.kktv.radio.R;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -36,7 +36,8 @@ public class KKTV_RADIO extends BaseActivity implements OnClickListener,
 	private RadioMenuAdapter mAdapter, mChildAdapter;
 	private int mActivePosition = -1;
 	private String mContentText;
-
+	private MediaPlayer mPlayer;
+	private static int[] Play = {0, -1, 0};//0:当前的频道 1：当前播放的电台 2：上一次的频道
 	@Override
 	protected void onCreate(Bundle inState) {
 		super.onCreate(inState);
@@ -81,20 +82,41 @@ public class KKTV_RADIO extends BaseActivity implements OnClickListener,
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
 			RadioType type = ChildCurrentChannel.get(position);
-			ArrayList<String> url = new ArrayList<String>();
-			url.add(type.getUrl());
-			startLiveMedia(url, type.getName());
+			showInfo(type.getUrl());
 		}
 	};
-
-	private void startLiveMedia(ArrayList<String> liveUrls, String name) {
-		Intent intent = new Intent(KKTV_RADIO.this, PlayerActivity.class);
-		intent.putExtra("selected", 0);
-		intent.putExtra("playlist", liveUrls);
-		intent.putExtra("title", name);
-		startActivity(intent);
+	
+	public void PlayerPrepare(String url){
+		try {
+			if (mPlayer == null) {
+				mPlayer = new MediaPlayer(this);
+			}
+			mPlayer.setDataSource(url);
+			mPlayer.prepare();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-
+	
+	public void PalyerStart(){
+		try {
+			if (mPlayer != null) {
+				mPlayer.start();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void PalyerStop(){
+		try {
+			if (mPlayer != null) {
+				mPlayer.stop();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	public AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
@@ -103,6 +125,7 @@ public class KKTV_RADIO extends BaseActivity implements OnClickListener,
 			String name = type.getName();
 			boolean isHas = false;
 			int size = channlesList.size();
+			Play[0] = position;
 			for (int i = 0; i < size; i++) {
 				RadioListType listType = channlesList.get(i);
 				if (name.equals(listType.getName())) {
@@ -138,7 +161,8 @@ public class KKTV_RADIO extends BaseActivity implements OnClickListener,
 		@Override
 		protected Void doInBackground(Void... paramArrayOfVoid) {
 			try {
-				ChildCurrentChannel = RadioChannelParse.parseRadioChild(type.getUrl());
+				ChildCurrentChannel = RadioChannelParse.parseRadioChild(type
+						.getUrl());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
